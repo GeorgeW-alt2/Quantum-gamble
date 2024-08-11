@@ -401,15 +401,14 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error: %v", err)
 		}
-
 		fmt.Printf("Read character: %c\n", char)
-
 		if char == '0' {
 			rez := PlaceLow(apiKey, amount, currency, fMode)
 			if rez {
 				fmt.Println("Bet successful.✅")
-				amount = fmt.Sprintf("%.2f", betOrig) // Convert result to string
 				bet = betOrig
+
+				amount = fmt.Sprintf("%.2f", betOrig) // Convert result to string
 			} else {
 				fmt.Println("Bet unsuccessful.☯")
 				bet = bet * 2
@@ -419,15 +418,12 @@ func main() {
 			rez := PlaceHigh(apiKey, amount, currency, fMode)
 			if rez {
 				fmt.Println("Bet successful.✅")
-				amount = fmt.Sprintf("%.2f", betOrig) // Convert result to string
 				bet = betOrig
-
-			
+				amount = fmt.Sprintf("%.2f", betOrig) // Convert result to string
 			} else {
 				fmt.Println("Bet unsuccessful.☯")
 				bet = bet * 2
 				amount = fmt.Sprintf("%.2f", bet) // Convert result to string
-
 			}
 		}
 	}
