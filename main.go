@@ -369,12 +369,14 @@ func main() {
 	var betOrig float64
 	var currency string
 	fMode := true
-	fmt.Print("Insert bet value: ")
-	fmt.Scan(&bet)
+	//fmt.Print("Insert bet value: ")
+	//fmt.Scan(&bet)
+	bet = 0.006
 	amount := fmt.Sprintf("%.2f", bet) 
 	betOrig = bet
-	fmt.Print("Choose currency: ")
-	fmt.Scan(&currency)
+	//fmt.Print("Choose currency: ")
+	//fmt.Scan(&currency)
+	currency = "doge"
 	// List available serial ports (optional)
 	ports, err := enumerator.GetDetailedPortsList()
 	if err != nil {
@@ -384,9 +386,9 @@ func main() {
 		fmt.Printf("Found port: %s\n", port.Name)
 	}
 	var selection string
-	fmt.Print("Serial port(from available): ")
-	fmt.Scan(&selection)
-
+	//fmt.Print("Serial port(from available): ")
+	//fmt.Scan(&selection)
+	selection = "/dev/ttyACM0"
 	// Open the serial port once
 	port, err := openSerialPort(selection, 115200)
 	if err != nil {
@@ -394,7 +396,7 @@ func main() {
 	}
 	defer port.Close()
 
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 99999999; i++ {
 		char, err := readOneCharFromSerial(port)
 		if err != nil {
 			log.Fatalf("Error: %v", err)
@@ -407,6 +409,7 @@ func main() {
 			if rez {
 				fmt.Println("Bet successful.✅")
 				amount = fmt.Sprintf("%.2f", betOrig) // Convert result to string
+				bet = betOrig
 			} else {
 				fmt.Println("Bet unsuccessful.☯")
 				bet = bet * 2
@@ -417,6 +420,8 @@ func main() {
 			if rez {
 				fmt.Println("Bet successful.✅")
 				amount = fmt.Sprintf("%.2f", betOrig) // Convert result to string
+				bet = betOrig
+
 			
 			} else {
 				fmt.Println("Bet unsuccessful.☯")
