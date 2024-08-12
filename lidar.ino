@@ -34,7 +34,7 @@ void loop(void)
   }
 
   int signalRate = distanceSensor.getSignalRate();
-  //Serial.println(signalRate);
+  Serial.println(signalRate);
 
   // Store the signal rate in the array
   signalRates[currentIndex] = signalRate;
@@ -82,16 +82,15 @@ void loop(void)
       }
     }
 
-    // Handle the special case where maxDetected occurs before minDetected
-    if (specialCaseDetected)
-    {
-    Serial.print("0");
-    }
-if (!specialCaseDetected)
-    {
-    Serial.print("1");
-    }
 
+    if (minSignalRate < 0 && maxSignalRate > threshold)
+    {
+      Serial.print("0");
+    }
+    else if (minSignalRate > 0 && minSignalRate < threshold && maxSignalRate > threshold)
+    {
+      Serial.print("1");
+    }
 
     // Reset the index to overwrite the old data
     currentIndex = 0;
