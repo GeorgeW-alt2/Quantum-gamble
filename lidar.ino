@@ -1,7 +1,9 @@
 #include <Wire.h>
 #include "SparkFun_VL53L1X.h" //Click here to get the library: http://librarymanager/All#SparkFun_VL53L1X
+
 SFEVL53L1X distanceSensor;
-int threshold = 13000; // Threshold to detect a peak
+int threshold = 10000; // Threshold to detect a peak
+
 void setup(void)
 {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -14,13 +16,14 @@ void setup(void)
       ;
   }
 }
-#define ARRAY_SIZE 10 // Define the size of the array to store signal rates
 
-int signalRates[ARRAY_SIZE];  // Array to store signal rates
-int currentIndex = 0;         // Index to keep track of current position in the array
+#define ARRAY_SIZE 20 // Define the size of the array to store signal rates
+
+int signalRates[ARRAY_SIZE]; // Array to store signal rates
+int currentIndex = 0;        // Index to keep track of current position in the array
 int minSignalRate, maxSignalRate; // Variables to store minimum and maximum signal rates
-bool minDetected = false;     // Flag to indicate if a minimum is detected
-bool maxDetected = false;     // Flag to indicate if a maximum is detected
+bool minDetected = false;    // Flag to indicate if a minimum is detected
+bool maxDetected = false;    // Flag to indicate if a maximum is detected
 
 void loop(void)
 {
@@ -29,9 +32,10 @@ void loop(void)
   {
     delay(1);
   }
-  
+
   int signalRate = distanceSensor.getSignalRate();
-  
+  //Serial.println(signalRate);
+
   // Store the signal rate in the array
   signalRates[currentIndex] = signalRate;
   currentIndex++;
@@ -58,33 +62,38 @@ void loop(void)
         maxDetected = true;
       }
     }
-    /*
-    // Check if both a minimum and a maximum were detected
-    if (minDetected || maxDetected)
+
+    // Check if both a maximum and a minimum were detected in sequence
+    bool specialCaseDetected = false;
+    if (maxDetected && minDetected)
     {
-      Serial.println("Min or Max detected");
-      Serial.print("Min: ");
-      Serial.println(minSignalRate);
-      Serial.print("Max: ");
-      Serial.println(maxSignalRate);
+      bool maxFirst = false;
+      for (int i = 0; i < ARRAY_SIZE; i++)
+      {
+        if (signalRates[i] > threshold)
+        {
+          maxFirst = true;
+        }
+        if (maxFirst && signalRates[i] < 0)
+        {
+          specialCaseDetected = true;
+          break;
+        }
+      }
     }
-    else
+
+    // Handle the special case where maxDetected occurs before minDetected
+    if (specialCaseDetected)
     {
-      Serial.println("No Min/Max detected or no range detected");
+    Serial.print("0");
     }
-    */
-  if (minSignalRate < 0 && maxSignalRate > threshold)
-      {
-        Serial.print("0");
-        currentIndex = 0;
-      }
-  if (minSignalRate > 0 && minSignalRate < threshold && maxSignalRate > threshold)
-      {
-        Serial.print("1");
-        currentIndex = 0;
-      }
+if (!specialCaseDetected)
+    {
+    Serial.print("1");
+    }
+
+
     // Reset the index to overwrite the old data
     currentIndex = 0;
-
   }
 }
