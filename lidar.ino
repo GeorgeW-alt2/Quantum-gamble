@@ -34,65 +34,12 @@ void loop(void)
   }
 
   int signalRate = distanceSensor.getSignalRate();
-  Serial.println(signalRate);
-
-  // Store the signal rate in the array
-  signalRates[currentIndex] = signalRate;
-  currentIndex++;
-
-  // If the array is full, process the data
-  if (currentIndex >= ARRAY_SIZE)
-  {
-    minSignalRate = signalRates[0];
-    maxSignalRate = signalRates[0];
-    minDetected = false;
-    maxDetected = false;
-
-    // Find minimum and maximum values in the array
-    for (int i = 1; i < ARRAY_SIZE; i++)
-    {
-      if (signalRates[i] < 0)
-      {
-        minSignalRate = signalRates[i];
-        minDetected = true;
-      }
-      if (signalRates[i] > threshold)
-      {
-        maxSignalRate = signalRates[i];
-        maxDetected = true;
-      }
+  //Serial.println(abs(signalRate));
+  if (abs(signalRate) > 22000){
+    Serial.print("1");
     }
-
-    // Check if both a maximum and a minimum were detected in sequence
-    bool specialCaseDetected = false;
-    if (maxDetected && minDetected)
-    {
-      bool maxFirst = false;
-      for (int i = 0; i < ARRAY_SIZE; i++)
-      {
-        if (signalRates[i] > threshold)
-        {
-          maxFirst = true;
-        }
-        if (maxFirst && signalRates[i] < 0)
-        {
-          specialCaseDetected = true;
-          break;
-        }
-      }
+  if (abs(signalRate) > 15000 && abs(signalRate) < 22000 ){
+    Serial.print("0");
     }
-
-
-    if (minSignalRate < 0 && maxSignalRate > threshold)
-    {
-      Serial.print("0");
-    }
-    else if (minSignalRate > 0 && minSignalRate < threshold && maxSignalRate > threshold)
-    {
-      Serial.print("1");
-    }
-
-    // Reset the index to overwrite the old data
-    currentIndex = 0;
-  }
+  delay(10);
 }
