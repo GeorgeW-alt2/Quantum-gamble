@@ -2,8 +2,6 @@
 #include "SparkFun_VL53L1X.h" //Click here to get the library: http://librarymanager/All#SparkFun_VL53L1X
 
 SFEVL53L1X distanceSensor;
-int threshold = 10000; // Threshold to detect a peak
-
 void setup(void)
 {
   pinMode(LED_BUILTIN, OUTPUT);
@@ -16,14 +14,6 @@ void setup(void)
       ;
   }
 }
-
-#define ARRAY_SIZE 20 // Define the size of the array to store signal rates
-
-int signalRates[ARRAY_SIZE]; // Array to store signal rates
-int currentIndex = 0;        // Index to keep track of current position in the array
-int minSignalRate, maxSignalRate; // Variables to store minimum and maximum signal rates
-bool minDetected = false;    // Flag to indicate if a minimum is detected
-bool maxDetected = false;    // Flag to indicate if a maximum is detected
 
 void loop(void)
 {
